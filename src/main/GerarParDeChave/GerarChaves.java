@@ -24,7 +24,7 @@ public class GerarChaves {
     public static void geraChave() {
         try {
             final KeyPairGenerator keyGen = KeyPairGenerator.getInstance(ALGORITMO);
-            keyGen.initialize(1024);
+            keyGen.initialize(4096);
             final KeyPair key = keyGen.generateKeyPair();
 
             File chavePrivadaFile = new File(CAMINHO_CHAVE_PRIVADA);
@@ -58,6 +58,8 @@ public class GerarChaves {
             e.printStackTrace();
         }
 
+        System.out.println("Suas chaves, publica e privada, estão na pasta Keys");
+
     }
 
     /**
@@ -73,6 +75,12 @@ public class GerarChaves {
         }
 
         return false;
+    }
+
+    public static void main(String[] args){
+
+        GerarChaves.geraChave();
+
     }
 
 }

@@ -1,16 +1,19 @@
 package main.Criptografa;
 
+import main.GeraHash.GeraHashArquivo;
 import main.GerarParDeChave.GerarChaves;
 
 import javax.crypto.Cipher;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 
 public class Criptografa {
 
     public static final String CAMINHO_MENSAGEM_CRIPTOGRAFADA = "Mensagem/criptografada.msg";
 
-    public static final String msgOriginal = "Exemplo de mensagem de teste 2 arquivo";
+    public static final String CAMINHO_ARQUIVO_HASH = "Arquivo.pdf";
 
     /**
      * Criptografa o texto puro usando chave pública.
@@ -34,9 +37,22 @@ public class Criptografa {
         return cipherText;
     }
 
+    public static String Hash() throws IOException, NoSuchAlgorithmException {
+
+        File file = new File(CAMINHO_ARQUIVO_HASH);
+
+        //SHA-1 checksum
+        String shaChecksum = GeraHashArquivo.getFileChecksum(file);
+
+        return shaChecksum;
+
+    }
+
     public static void main(String[] args){
 
         try {
+
+
 
             ObjectInputStream inputStream = null;
 
@@ -49,7 +65,7 @@ public class Criptografa {
             // Criptografa a Mensagem usando a Chave Pública
             inputStream = new ObjectInputStream(new FileInputStream(GerarChaves.CAMINHO_CHAVE_PUBLICA));
             final PublicKey chavePublica = (PublicKey) inputStream.readObject();
-            final byte[] textoCriptografado = Criptografa.criptografa(msgOriginal, chavePublica);
+            final byte[] textoCriptografado = Criptografa.criptografa(Hash(), chavePublica);
 
             File mensagemCriptografada = new File(CAMINHO_MENSAGEM_CRIPTOGRAFADA);
             if (mensagemCriptografada.getParentFile() != null) {
@@ -57,10 +73,14 @@ public class Criptografa {
             }
             mensagemCriptografada.createNewFile();
 
+            String t = new String(textoCriptografado, StandardCharsets.UTF_8);
+
             ObjectOutputStream mensagem = new ObjectOutputStream(
                     new FileOutputStream(mensagemCriptografada));
-            mensagem.writeObject(textoCriptografado);
+            mensagem.writeObject(t);
             mensagem.close();
+
+            System.out.println("Mensagem criptografada e salva no caminho: " + CAMINHO_MENSAGEM_CRIPTOGRAFADA);
 
         } catch (Exception e) {
             e.printStackTrace();
