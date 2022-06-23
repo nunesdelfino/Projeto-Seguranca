@@ -5,7 +5,6 @@ import main.GerarParDeChave.GerarChaves;
 
 import javax.crypto.Cipher;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 
@@ -73,11 +72,9 @@ public class Criptografa {
             }
             mensagemCriptografada.createNewFile();
 
-            String t = new String(textoCriptografado, StandardCharsets.UTF_8);
-
             ObjectOutputStream mensagem = new ObjectOutputStream(
                     new FileOutputStream(mensagemCriptografada));
-            mensagem.writeObject(t);
+            mensagem.writeObject(textoCriptografado);
             mensagem.close();
 
             System.out.println("Mensagem criptografada e salva no caminho: " + CAMINHO_MENSAGEM_CRIPTOGRAFADA);
